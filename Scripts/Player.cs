@@ -13,14 +13,13 @@ public partial class Player : CharacterBody2D
 	bool attackingRanged = false;
 	int health = 5;
 	int damage = 2;
-
 	Node2D weaponMarker;
-    public override void _Ready()
-    {
+	public override void _Ready()
+	{
 		arrowScene = (PackedScene)ResourceLoader.Load("res://Scenes/Projectiles/arrow.tscn");
 		weaponMarker = GetNode<Node2D>("WeaponHolder");
-    }
-    public override void _PhysicsProcess(double delta)
+	}
+	public override void _PhysicsProcess(double delta)
 	{
 		if(dying) return;
 		RotateWeapon();
@@ -41,6 +40,9 @@ public partial class Player : CharacterBody2D
 			}
 		}
 	}
+	public void takeDamage(int amount){
+		health -= amount;
+	}
 	private void RotateWeapon()
 	{
 		Vector2 cursorPos = GetLocalMousePosition();
@@ -53,8 +55,9 @@ public partial class Player : CharacterBody2D
 			MeleeAttack(targetPosition);
 			Arrow arrowTemp = arrowScene.Instantiate<Arrow>();
 			arrowTemp.direction = targetPosition;
+			arrowTemp.SetDamage(damage);
+			AddChild(arrowTemp);
 		}
-		
 	}
 	private void MeleeAttack(Vector2 targetPos)
 	{
@@ -66,14 +69,12 @@ public partial class Player : CharacterBody2D
 		};
 		
 	}
-    private void ReturnDefault()
-    {
+	private void ReturnDefault()
+	{
 		Tween tween = CreateTween();
 		tween.TweenProperty(weaponMarker, "position", Vector2.Zero, .3);
 		GetTree().CreateTimer(0.5).Timeout += () => {
 			attackingMelee = false;
 		};
-		
-		
-    }
+	}
 }
