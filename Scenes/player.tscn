@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://d2ormatss3tfx"]
+
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_c4i2o"]
+[ext_resource type="Texture2D" uid="uid://csl6gxu6iu0i1" path="res://Assets/Assets-2DActionRPG/kenney_tiny-dungeon/Tiles/tile_0085.png" id="1_cg5rx"]
+[ext_resource type="Texture2D" uid="uid://dwgiknhalj5pm" path="res://Assets/Assets-2DActionRPG/kenney_tiny-dungeon/Tiles/tile_0104.png" id="3_nf87a"]
+[ext_resource type="Texture2D" uid="uid://cymvme8dqaqcl" path="res://Assets/Assets-2DActionRPG/kenney_tiny-town/Tiles/tile_0118.png" id="4_sduqx"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u87kr"]
+radius = 6.0
+height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7w1qk"]
+size = Vector2(16, 8)
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1_c4i2o")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_cg5rx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_u87kr")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+
+[node name="WeaponHolder" type="Marker2D" parent="."]
+
+[node name="Melee" type="Area2D" parent="WeaponHolder"]
+position = Vector2(10, 0)
+
+[node name="Sprite" type="Sprite2D" parent="WeaponHolder/Melee"]
+position = Vector2(6, 0)
+rotation = 1.5708
+scale = Vector2(-1, 1)
+texture = ExtResource("3_nf87a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHolder/Melee"]
+position = Vector2(6, 0)
+shape = SubResource("RectangleShape2D_7w1qk")
+
+[node name="Ranged" type="Marker2D" parent="WeaponHolder"]
+
+[node name="Tile0118" type="Sprite2D" parent="WeaponHolder/Ranged"]
+position = Vector2(12, 0)
+texture = ExtResource("4_sduqx")
+
+[connection signal="body_entered" from="WeaponHolder/Melee" to="." method="OnMeleeBodyEntered"]

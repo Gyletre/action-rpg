@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://d17gslixbjdos"]
+
+[ext_resource type="Script" path="res://Scripts/Arrow.cs" id="1_rbvdx"]
+[ext_resource type="Texture2D" uid="uid://lct3om5l3i2k" path="res://Assets/Assets-2DActionRPG/kenney_tiny-town/Tiles/tile_0119.png" id="2_whfvg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ucjqb"]
+size = Vector2(20, 8)
+
+[node name="Arrow" type="Area2D"]
+script = ExtResource("1_rbvdx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ucjqb")
+
+[node name="Tile0119" type="Sprite2D" parent="."]
+rotation = 0.785398
+texture = ExtResource("2_whfvg")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
