@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://biycc7jrr1tqq"]
+[gd_scene load_steps=7 format=3 uid="uid://biycc7jrr1tqq"]
 
 [ext_resource type="Script" path="res://Scripts/Cyclops.cs" id="1_amqc6"]
 [ext_resource type="Texture2D" uid="uid://d0woc8imx4ekw" path="res://Assets/Assets-2DActionRPG/kenney_tiny-dungeon/Tiles/tile_0109.png" id="1_vqv0l"]
@@ -7,11 +7,77 @@
 radius = 6.0
 height = 16.0
 
+[sub_resource type="Animation" id="Animation_v7m6y"]
+resource_name = "death"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -16), Vector2(0, -16), Vector2(0, 16)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.488692, 0.815069, 1.78024]
+}
+
+[sub_resource type="Animation" id="Animation_erh1s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e5756"]
+_data = {
+"RESET": SubResource("Animation_erh1s"),
+"death": SubResource("Animation_v7m6y")
+}
+
 [node name="Cyclops" type="CharacterBody2D" groups=["monster"]]
 script = ExtResource("1_amqc6")
 
-[node name="Tile0109" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_vqv0l")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_8as4o")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_e5756")
+}
