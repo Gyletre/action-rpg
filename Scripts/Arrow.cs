@@ -11,7 +11,6 @@ public partial class Arrow : Area2D
     public override void _Ready()
     {
 		GetTree().CreateTimer(5).Timeout += () => {
-			GD.Print("Arrow Timed out");
 			QueueFree();
 		};
 		

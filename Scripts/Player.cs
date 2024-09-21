@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class Player : CharacterBody2D
@@ -8,6 +9,7 @@ public partial class Player : CharacterBody2D
 	bool dying = false;
 	bool attackingMelee = false;
 	bool attackingRanged = false;
+	CharacterClass[] classes;
 	int health = 5;
 	int damage = 2;
 	Node2D weaponMarker;
@@ -27,8 +29,6 @@ public partial class Player : CharacterBody2D
 		meleeWeapon = GetNode<Node2D>("WeaponHolder/Melee");
 		rangedWeapon = GetNode<Node2D>("WeaponHolder/Ranged");
 		rangedWeapon.Hide();
-		
-
 	}
 	public override void _PhysicsProcess(double delta)
 	{
@@ -61,6 +61,7 @@ public partial class Player : CharacterBody2D
 	
 	private void RotateWeapon()
 	{
+		if(attackingMelee) return;
 		Vector2 cursorPos = GetLocalMousePosition();
 		GetNode<Sprite2D>("Sprite").FlipH = cursorPos.X < 0;
 		weaponMarker.Rotation = cursorPos.Angle();
@@ -97,28 +98,41 @@ public partial class Player : CharacterBody2D
     private void MeleeAttack(Vector2 targetPos) //the process of 
 	{
 		attackingMelee = true;
-		Tween tween = CreateTween();
-		tween.TweenProperty(weaponMarker, "position", targetPos*30, .3);
-		GetTree().CreateTimer(.3).Timeout += () => {
-			Tween tween = CreateTween();
-			tween.TweenProperty(weaponMarker, "position", Vector2.Zero, .3);
-			GetTree().CreateTimer(0.5).Timeout += () => {
-				attackingMelee = false;
-			};
+		AnimationPlayer animPlayer = meleeWeapon.GetChild<AnimationPlayer>(2);
+		animPlayer.Play("attack");
+		GetTree().CreateTimer(1).Timeout += () => {
+			attackingMelee = false;
 		};
 		
 	}
-	private void RangedAttack(Vector2 targetPos)
+	private void RangedAttack(Vector2 targetPos) //Handles Ranged attack
     {
 		attackingRanged = true;
         Arrow arrowTemp = arrowScene.Instantiate<Arrow>();
         arrowTemp.direction = targetPos;
         arrowTemp.Setup(damage,GetParent().GetNode<Node2D>("Player"));
-		arrowTemp.GlobalPosition = GlobalPosition;
+		arrowTemp.GlobalPosition = GetNode<Node2D>("WeaponHolder/Ranged").GlobalPosition;
 		GetParent().AddChild(arrowTemp);
 		GetTree().CreateTimer(0.4).Timeout += () => {
 			attackingRanged = false;
 		};
-        
+    }
+}
+
+class CharacterClass
+{
+	int level = 1;
+	int experience =1;
+	int damageScaling;
+	public void GainExp(int amount){
+		experience += amount;
+	}
+	public int GetAttack(){
+		return GetLevel()*damageScaling;
+	}
+
+    public int GetLevel()
+    {
+        return Mathf.Min(1+experience/10,10);
     }
 }
