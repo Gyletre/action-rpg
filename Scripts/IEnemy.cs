@@ -1,4 +1,5 @@
 
-public interface IEnemy{
+public interface IEnemy
+{
     void Hit(int damageTaken);
 }

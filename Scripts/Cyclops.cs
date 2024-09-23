@@ -10,20 +10,24 @@ public partial class Cyclops : CharacterBody2D, IEnemy
 	private int health = 5;
 	[Export]
 	private int damage = 1;
-    public override void _EnterTree()
-    {
-		if (player == null){
+	public override void _EnterTree()
+	{
+		if (player == null)
+		{
 			player = GetNode<CharacterBody2D>("../Player");
 		}
-    }
-    public void Hit(int damageTaken)
+	}
+	public void Hit(int damageTaken)
 	{
 		GD.Print(damageTaken);
 		health -= damageTaken;
-		if(health <= 0){
+		if (health <= 0)
+		{
 			GetNode<AnimationPlayer>("AnimationPlayer").Play("death");
-			GetTree().CreateTimer(0.5).Timeout += () =>{
-				if(GetParent() is Spawner spawner){
+			GetTree().CreateTimer(0.5).Timeout += () =>
+			{
+				if (GetParent() is Spawner spawner)
+				{
 					spawner.hasEnemy = false;
 				}
 				QueueFree();
@@ -32,11 +36,12 @@ public partial class Cyclops : CharacterBody2D, IEnemy
 	}
 	public override void _PhysicsProcess(double delta)
 	{
-		if(IsInstanceValid(player)){
-			Vector2 direction = (player.GlobalPosition-GlobalPosition).Normalized();
-			if(Position.DistanceTo(player.Position) > 10 || Position.DistanceTo(player.Position)< 500)
+		if (IsInstanceValid(player))
+		{
+			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
+			if (Position.DistanceTo(player.Position) > 10 || Position.DistanceTo(player.Position) < 500)
 			{
-				Velocity = speed*(float)delta*direction;
+				Velocity = speed * (float)delta * direction;
 			}
 			else
 			{
